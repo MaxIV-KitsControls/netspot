@@ -1,0 +1,105 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Ansible job queue</h1>
+
+<p><a href="{% url 'playbook_log' %}">Ansible run log</a></p>
+
+{% if error_message %}
+  <font color="red">{{ error_message }}</font>
+{% else %}
+  <h3>Queued jobs</h3>
+
+  <table class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <th width='30'>QID</th>
+        <th width='130'>Status</th>
+        <th width='80'>Username</th>
+        <th width='150'>Date</th>
+        <th width='200'>Playbook</th>
+        <th width='170'>Filter</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for qtask in queued_tasks %}
+        <tr>
+          <td>{{ qtask.id }}</td>
+          <td><font color='orange'>Waiting</font></td>
+          <td>{{ qtask.username }}</td>
+          <td>{{ qtask.date|slice:":19" }}</td>
+          <td>{{ qtask.playbook }}</td>
+          <td>{{ qtask.hosts|slice:":20" }}</td>
+          <td><a href="/deletetask/{{ qtask.id }}" onclick="return confirm('Are you sure you want to delete this job?');">Delete</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Active jobs</h3>
+
+  <table class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <th width='30'>QID</th>
+        <th width='130'>Status</th>
+        <th width='80'>Username</th>
+        <th width='150'>Date</th>
+        <th width='200'>Playbook</th>
+        <th width='170'>Filter</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for atask in active_tasks %}
+        <tr>
+          <td>{{ atask.id }}</td>
+          <td><font color='blue'>Running</font></td>
+          <td>{{ atask.username }}</td>
+          <td>{{ atask.date|slice:":19" }}</td>
+          <td>{{ atask.playbook }}</td>
+          <td>{{ atask.hosts|slice:":20" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Processed jobs</h3>
+
+  <table class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <th width='30'>QID</th>
+        <th width='130'>Status</th>
+        <th width='80'>Username</th>
+        <th width='150'>Date</th>
+        <th width='200'>Playbook</th>
+        <th width='170'>Filter</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ptask in processed_tasks %}
+        <tr>
+          <td>{{ ptask.id }}</td>
+          <td>
+            {% if ptask.status == 3 %}
+              <font color='green'>Done</font>
+            {% elif ptask.status == 4 %}
+              <font color='orange'>Done with failures</font>
+            {% elif ptask.status == 5 %}
+              <font color='red'>Ansible errors</font>
+            {% endif %}
+          </td>
+          <td>{{ ptask.username }}</td>
+          <td>{{ ptask.date|slice:":19"  }}</td>
+          <td>{{ ptask.playbook }}</td>
+          <td>{{ ptask.hosts|slice:":20" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+{% endblock %}

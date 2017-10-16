@@ -1,0 +1,52 @@
+<form action="/templify/template/genconfig" method="post">
+  {% csrf_token %}
+  {% if asset_name %}
+    <input name="asset_name" value="{{ asset_name }}" type="hidden">
+  {% endif %}
+  <input name="template_id" value="{{ template.id }}" type="hidden">
+  <table class="table table-condensed table-hover">
+    <thead>
+      <th>Variable</th>
+      <th>Value</th>
+      <th>Description</th>
+      <th>Example</th>
+    </thead>
+    <tbody>
+    {% for variable in template.variable_set.all %}
+      <tr>
+        <td>
+          <label>{{ variable.variable|title }}</label>
+        </td>
+        <td width="200">
+          <div class="form-group">
+            {% if variable.variable == 'interfaces' and interfaces %}
+              {{ interfaces_str }}
+              <input type="hidden" name="interfaces" value="{{ interfaces_str }}">
+            {% else %}
+              <input type="text" class="form-control"
+                     name="{{ variable.variable }}"
+                     {% if variable.regex %}
+                       pattern="{{ variable.regex }}"
+                     {% endif %}
+                     title="Eg. {{ variable.example }}"
+                     required>
+            {% endif %}
+          </div>
+        </td>
+        <td>
+          {{ variable.description }}
+        </td>
+        <td>
+          {{ variable.example }}
+        </td>
+      </tr>
+    {% endfor %}
+    <tr>
+      <td><button type="submit" class="btn btn-default">Generate configuration</button></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    </tbody>
+  </table>
+</form>

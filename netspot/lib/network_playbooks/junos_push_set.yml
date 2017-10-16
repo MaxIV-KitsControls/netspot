@@ -1,0 +1,18 @@
+# Push configuration to a JUNOS device.
+
+---
+- name: Issue a list of JUNOS set commands
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Issue set commands
+    junos_config:
+      host: "{{ loopback }}"
+      comment: "{{ commit_comment }}"
+      ssh_keyfile: "{{ ssh_keyfile }}"
+      lines:
+        - "{{ item }}"
+    with_lines:
+      - cat "{{ config_file }}"

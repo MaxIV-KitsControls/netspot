@@ -1,0 +1,29 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Port provisioning</h1>
+
+<form action="{% url 'pa_prepare' %}" method="POST" class="form-inline">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <th width='120'>Network outlet</th><td><input type="text" class="form-control" name="outlet" required></td>
+    </tr>
+    <tr>
+      <th>Port profile</th>
+      <td>
+        <select name="template_id" class="form-control" required>
+          <option value="">Please pick one</option>
+          {% for port_template in port_templates %}
+              <option value="{{ port_template.id }}">{{ port_template }}</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+  </table><br>
+  <p><button type="submit" class="btn btn-default">Prepare port</button></p>
+</form>
+
+{% endblock %}
+
+

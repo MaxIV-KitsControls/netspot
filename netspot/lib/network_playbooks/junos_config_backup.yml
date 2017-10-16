@@ -1,0 +1,7 @@
+---
+- name: JUNOS Config Backup
+  hosts: all
+  gather_facts: no
+  connection: local
+  roles:
+    - role: junos_config_backup

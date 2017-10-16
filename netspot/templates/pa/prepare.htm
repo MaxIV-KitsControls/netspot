@@ -1,0 +1,43 @@
+{% extends "base.htm" %}
+
+{% block content %}
+
+
+{% if error_message %}
+  <br><p><font color="red">{{ error_message }}</font></p>
+{% else %}
+  {% if confirmed %}
+    <h1>Port deployment status</h1>
+
+    Your port will be deployed in the a few minutes. Please wait 5 minutes and then test the port.
+  {% else %}
+    <h1>Prepare Port Deployment</h1>
+
+    <h3>Cable</h3>
+    {% for sub_path in cable_path %}
+      <b>{{ sub_path.0 }}</b> {{ sub_path.1 }}<br>
+    {% endfor %}
+
+    <h3>Network</h3>
+    <b>Network port:</b> {{ asset }}:{{ interfaces }}<br>
+    {% if beamline %}
+      <b>Beamline:</b> {{ beamline|upper }}
+    {% endif %}
+    <h3>Config</h3>
+    <pre>{{ config }}</pre>
+
+    <h3>Confirm</h3>
+    If eveything looks OK please confirm port deployment.<p>
+    <form action="{% url 'pa_prepare' %}" method="POST" class="form-inline">
+      {% csrf_token %}
+      <input type="hidden" value="{{ outlet }}" name="outlet" required>
+      <input type="hidden" value="{{ template_id }}" name="template_id" required>
+      <input type="hidden" value="{{ confirmed }}" name="confirmed" required>
+      <button type="submit" class="btn btn-default">Confirm</button>
+    </form>
+  {% endif %}
+{% endif %}
+
+{% endblock %}
+
+

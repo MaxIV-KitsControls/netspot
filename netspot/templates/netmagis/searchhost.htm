@@ -1,0 +1,87 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>NetMagis - Search host</h1>
+
+<p></p>
+
+<form action="{% url 'nm_searchhost' %}" method="POST">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="search">Search NetMagis for MAC address or hostname</label>
+    <input type="search" name="search" class="form-control" id="search" value="{{ search }}">
+  </div>
+  <button type="submit" class="btn btn-default">Search</button>
+</form>
+
+<p></p>
+<h3>NetMagis Result</h3>
+<table class="table table-hover table-condensed">
+  <thead>
+    <th width='100px'>Name</th>
+    <th width='100px'>IP address</th>
+    <th width='100px'>MAC</th>
+    <th width='50px'>Date</th>
+    <th width='100px'>Comment</th>
+  </thead>
+  <tbody>
+    {% for host in hosts %}
+      <tr>
+        <td>
+          {{ host.name }}
+        </td>
+        <td>
+          {{ host.addr }}
+        </td>
+        <td>
+          {{ host.mac }}
+        </td>
+        <td>
+          {{ host.date }}
+        </td>
+        <td>
+          {{ host.comment }}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p></p>
+<h3>MAC database result</h3>
+<table class="table table-hover table-condensed">
+  <thead>
+    <th width='100px'>Asset</th>
+    <th width='100px'>Interface</th>
+    <th width='100px'>IP</th>
+    <th width='100px'>MAC</th>
+    <th width='50px'>VLAN</th>
+    <th width='100px'>Outlet</th>
+  </thead>
+  <tbody>
+    {% for mac in mac_search %}
+      <tr>
+        <td>
+          <a href="/assets/{{ mac.asset }}">{{ mac.asset }}</a>
+        </td>
+        <td>
+          {{ mac.interface }}
+        </td>
+        <td>
+          {{ mac.ip }}
+        </td>
+        <td>
+          {{ mac.mac }}
+        </td>
+        <td>
+          {{ mac.vlan }}
+        </td>
+        <td>
+          {{ mac.outlet }}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

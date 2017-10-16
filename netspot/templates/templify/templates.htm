@@ -1,0 +1,38 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Generate configuration</h1>
+
+<a href="/admin/netspot/configurationtemplate/add/">Add new template</a>
+
+<h2>Templates</h2>
+
+{% for category, template_details in templates.items %}
+<h4>{{ category }}</h4>
+
+  <table class="table table-condensed table-hover">
+    <thead>
+      <th>Template</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </thead>
+    <tbody>
+      {% for template in template_details %}
+        <tr>
+          <td width='200'>
+            {{ template.name }}
+          </td>
+          <td width='300'>
+            {{ template.description }}
+          </td>
+          <td>
+            <a href="/templify/template/{{ template.id }}">Generate config</a> -
+            <a href="/admin/netspot/configurationtemplate/{{ template.id }}/change/">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endfor %}
+
+{% endblock %}

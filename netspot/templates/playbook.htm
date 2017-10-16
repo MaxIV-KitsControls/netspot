@@ -1,0 +1,115 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Playbook - {{ playbook }}</h1>
+
+<p>{{ description }}</p>
+
+<form action="{% url 'run_playbook' %}" method="post">
+  {% csrf_token %}
+  <input name="playbook_id" value="{{ playbook_id }}" type="hidden">
+  <table>
+    <tbody>
+      <tr valign="top">
+        <td width=170>
+          <label>Filter</label>
+        </td>
+        <td>
+          <div class="form-group col-lg-10">
+            {% if asset_name %}
+              {{ asset_name }}
+              <input name="filter" value="{{ asset_name }}" type="hidden">
+            {% elif assets %}
+              <select name="filter" class="form-control" size="8" multiple required>
+              <option value="{{ asset_filter }}">{{ asset_filter }}</option>
+              {% for asset in assets %}
+                  <option value="{{ asset.asset }}">{{ asset.asset }}</option>
+              {% endfor %}
+              </select>
+            {% else %}
+              <input name="filter" class="form-control" value="{{ filter }}" type="text" required>
+            {% endif %}
+          </div>
+        </td>
+        <td>
+          <i>Devices to run against. Eg. w-netlab-sw-4 or groups:itlab</i>
+        </td>
+      </tr>
+        {% for input in inputs %}
+        <tr>
+          <td>
+            <label>{{ input|title }}</label>
+          </td>
+            {% if input.name == 'config_file' and config_file %}
+              <td width="400">
+                <div class="form-group col-lg-10">
+                  <input type="hidden" name="{{ input }}" value="{{ config_file }}" required>{{ config_file }}
+                </div>
+              </td>
+              <td></td>
+            {% else %}
+              <td width="220">
+                <div class="form-group col-lg-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="{{ input }}"
+                    pattern="{{ input.regex }}"
+                    title="Eg. {{ input.example }}"
+                    required>
+                  </div>
+              </td>
+              <td>
+                <i>{{ input.example }}</i>
+              </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      <tr>
+      {% if user_auth %}
+        <tr>
+          <td>
+            <label>Username</label>
+          </td>
+          <td width="200">
+            <div class="form-group col-lg-10">
+              <input name="ansible_username" class="form-control" value="{{ request.user.username }}" type="text" required>
+            </div>
+          </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            <label>Password</label>
+          </td>
+          <td width="200">
+            <div class="form-group col-lg-10">
+              <input name="ansible_password" class="form-control" value="" type="password" required>
+            </div>
+          </td>
+          <td></td>
+        </tr>
+      {% endif %}
+      <tr>
+        <td><br><input type="submit" class="btn btn-default" value="Run playbook"></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+{% if config %}
+<table style="border-collapse: separate; border-spacing: 10px;" width="100%">
+  <tr valign="top">
+    <td width="50%"><h4>Template</h4></td>
+    <td width="50%"><h4>Configuration</h4></td>
+  </tr>
+  <tr valign="top">
+    <td><pre>{{ template|linebreaksbr }}</pre></td>
+    <td>
+      <pre>{% if error %}<font color="red"><p>ERROR!</p></font>{% endif %}{{ config|linebreaksbr }}</pre>
+    </td>
+  </tr>
+</table>
+{% endif %}
+
+{% endblock %}

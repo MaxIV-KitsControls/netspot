@@ -1,0 +1,9 @@
+---
+- name: Get JUNOS MAC - ARP tables
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Get MAC-ARP tables
+    shell: "/usr/share/nginx/netspot/netspot/lib/spotmax/nc_client.py -a {{ loopback }} -u automation -k {{ ssh_keyfile }}"

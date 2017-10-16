@@ -1,0 +1,70 @@
+#
+# ansible-playbook netspot/lib/network_playbooks/update_netspot.yml --ask-sudo-pass
+#
+# Playbook that will update SPOTMAX webgui on the local server
+#
+
+---
+- name: Push autopilot and restart Nginx and gunicorn
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Stop nginx
+    become: true
+    service: 
+      name: nginx
+      state: stopped
+
+  - name: Stop gunicorn
+    become: true
+    service: 
+      name: gunicorn
+      state: stopped
+
+  - name: Git pull NetSPOT
+    git:
+      repo: git@gitlab.maxiv.lu.se:olokas/netspot.git
+      dest: /usr/share/nginx/netspot/
+      clone: yes
+      update: yes
+      force: yes
+    register: spotmaxweb_pull
+    tags:
+      git
+
+  - name: Git pull documentation
+    git:
+      repo: git@gitlab.maxiv.lu.se:olokas/spotmax-docs.git
+      dest: /usr/share/nginx/spotmax-docs/
+      clone: yes
+      update: yes
+      force: yes
+    register: spotmax-docs_pull
+    tags:
+      documentation
+
+  - name: Rebuild the documentation
+    shell: "cd /usr/share/nginx/spotmax-docs/ && /usr/bin/mkdocs build --clean"
+    tags:
+      documentation
+
+  - name: Restart ansible_runner
+    become: true
+    service:
+      name: ansible_runner
+      state: restarted
+
+  - name: Start nginx
+    become: true
+    service:
+      name: nginx
+      state: started
+
+  - name: Start gunicorn
+    become: true
+    service:
+      name: gunicorn
+      state: started
+

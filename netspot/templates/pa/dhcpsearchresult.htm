@@ -1,0 +1,22 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Search DHCP logs result</h1>
+
+  <h4>DHCP logs</h4>
+  {% if dhcp_logs %}
+    <p>Found {{ dhcp_logs|length }} DHCP log entries for <b>{{ search }}</b>.</p>
+    {% for dhcp_line in dhcp_logs %}
+      {{ dhcp_line }}<br>
+    {% endfor %}
+  {% else %}
+    {% if not dhcp_error %}
+      <p>No DHCP logs found.</p>
+    {% else %}
+      <font color="red">{{ dhcp_error }}</font>
+    {% endif %}
+  {% endif %}
+
+{% endblock %}
+
+

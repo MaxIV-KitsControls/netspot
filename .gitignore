@@ -1,0 +1,7 @@
+*.pyc
+._*
+db.sqlite3
+netspot/migrations/*
+taskdb.db
+netspot_settings.py
+*.retry

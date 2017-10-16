@@ -1,0 +1,15 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Playbooks</h1>
+
+<p><a href="{% url 'playbook_log' %}">Run log</a></p>
+
+<p><a href="/reports/playbookruns">Playbook runs statistics</a></p>
+
+<h2>Available playbooks</h2>
+{% for playbook in playbooks %}
+  <p><a href="{{ playbook.id }}">{{ playbook }}</a></p>
+{% endfor %}
+
+{% endblock %}

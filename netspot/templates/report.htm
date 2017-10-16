@@ -1,0 +1,23 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>{{ name }}</h1>
+
+<p>{{ description }}</p>
+
+<table>
+  <tr>
+    {% for header in result.headers %}
+      <th width="150px">{{ header }}</th>
+    {% endfor %}
+  </tr>
+  {% for row in result.rows %}
+    <tr>
+      {% for value in row %}
+        <td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

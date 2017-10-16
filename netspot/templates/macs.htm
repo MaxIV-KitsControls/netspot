@@ -1,0 +1,67 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>MACs</h1>
+
+{% if macfilter %}
+  <p><b>MAC/ARP Search</b> {{ macfilter }}</p>
+
+  <h3>Search</h3>
+  {% include 'includes/form_mac_search.htm' %}
+  <p></p>
+  <table class="table table-hover table-condensed">
+    <thead>
+      <tr>
+        <th width='150px'>Asset</th>
+        <th width='100px'>MACs</th>
+        <th width='120px'>ARP</th>
+        <th width='100px'>Interface</th>
+        <th width='150px'>VLAN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <p>Found {{ result_counter }} MAC addresses.</p>
+
+      {% for device in devices %}
+        {% for mac in device.macs %}
+          <tr>
+            <td>
+              <a href="/assets/{{ device.asset }}">{{ device.asset }}</a>
+            </td>
+            <td>
+              {{ mac.mac }}
+            </td>
+            <td>
+              {{ mac.ip }}
+            </td>
+            <td>
+              {{ mac.interface }}
+            </td>
+            <td>
+              {{ mac.vlan }}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <h3>MAC/ARP Search</h3>
+  <p>{% include 'includes/form_mac_search.htm' %}</p>
+
+  <p><b>Example searches:</b><p>
+
+  <b>Find asset:</b> "b-a100330-a-9"<br>
+  <b>Find MAC:</b> "mac:00:10:DB:FF:10:00"<br>
+  <b>Part of MAC:</b>  "mac:10:00"<br>
+  <b>IP:</b> "ip:172.16.0.4"<br>
+  <b>Part of IP:</b> "ip:0.4"<br>
+
+  <h2>Statistics</h2>
+  <p>
+    <b>Number of devices:</b> {{ num_assets }}<br>
+    <b>Number of MAC addresses:</b> {{ num_macs }}
+  </p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,20 @@
+# Push configuration to a JUNOS device.
+
+---
+- name: Push JUNOS configlet
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  pre_tasks:
+  - name: Push configlet
+    junos_config:
+      timeout: 300
+      comment: "{{ commit_comment }}"
+      host: "{{ loopback }}"
+      src: "{{ config_file }}"
+      update: "{{ update_style }}"
+      ssh_keyfile: "{{ ssh_keyfile }}"
+
+  roles:
+    - role: ns_discover

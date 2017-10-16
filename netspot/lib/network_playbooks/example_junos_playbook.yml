@@ -1,0 +1,20 @@
+---
+
+- name: Example JUNOS playbook
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Include encrypted variables
+    include_vars: "{{ enc_vars }}"    # This file contains the "cli" provider
+
+  - name: Run JUNOS cli command and print result
+    junos_command:
+      provider: "{{ cli }}"
+      commands:
+        - show version
+    register: junos_show_version
+
+  - debug:
+      var: junos_show_version

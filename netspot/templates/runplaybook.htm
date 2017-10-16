@@ -1,0 +1,12 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Playbook run - {{ playbook }}</h1>
+
+<b>Filter:</b> {{ asset_filter }}<p>
+
+<h2>Playbook recap</h2>
+
+{{ run_output|safe|linebreaks }}
+
+{% endblock %}

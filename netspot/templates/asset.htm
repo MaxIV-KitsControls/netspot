@@ -1,0 +1,134 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>{{ name }}</h1>
+
+{% if message %}
+  <font color="red">{{ message }}</font>
+{% endif %}
+
+<table>
+  <tr valign="top">
+    <td>
+      <h2>Asset details</h2>
+      <table class="table table-hover table-condensed">
+        <thead>
+          <th width='150px'>Variable</th><th>Value</th>
+        </thead>
+        <tbody>
+          {% for key, value in asset.items %}
+            <tr>
+              {% if key == 'groups' %}
+                <th>
+                  {{ key }}
+                </th>
+                <td>
+                  {% for group in asset.groups %}
+                    <a href="/groups/{{ group }}">{{ group }}</a>{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td></td>
+              {% elif key == 'uptime' %}
+                <th>{{ key }}</th>
+                <td>{{ value }}</td>
+                <td></td>
+              {% elif key != 'interfaces' and key != 'variables' %}
+                <th>{{ key }}</th>
+                <td>{{ value }}</td>
+                <td></td>
+              {% endif %}
+            <tr>
+          {% endfor %}
+          {% if variables %}
+            {% include 'includes/user_variables.htm' %}
+          {% endif %}
+        </tbody>
+      </table>
+    </td>
+    <td width="50%">
+      <h2>Actions</h2>
+
+      <h4>Add variable</h4>
+      {% include 'includes/form_add_user_variable.htm' %}
+
+      <h4>Delete asset</h4>
+      <a href="/deleteasset/{{ name }}" onclick="return confirm('Are you sure you want to delete this asset?');">Delete asset</a>
+    </td>
+  </tr>
+</table>
+
+
+<h3>Auto-discovered interfaces</h3>
+
+<form action="/deployport/" method="post">
+  <input type="hidden" name="asset_name" value="{{ name }}">
+  {% csrf_token %}
+  <table class="table table-hover table-condensed">
+    <thead>
+      <th width='100px'>Interface</th>
+      <th width='250px'>Description</th>
+      <th width='50px'>Speed</th>
+      <th width='100px'>MAC</th>
+      <th width='100px'>VLAN</th>
+      <th width='180px'>LLDP Neighbor(s)</th>
+      <th width='80px'>Deploy port</th>
+    </thead>
+    <tbody>
+      {% for interface in interfaces %}
+        <tr>
+          <td>
+            {{ interface.interface }}
+          </td>
+          <td>
+            {{ interface.description }}
+          </td>
+          <td>
+            {{ interface.speed }}
+          </td>
+          <td>
+            {{ interface.mac }}
+          </td>
+          <td>
+            {{ interface.vlan }}
+          </td>
+          <td>
+            {% for neighbor in interface.lldp_neighbor %}
+              {{ neighbor }}<br>
+            {% endfor %}
+          </td>
+          <td>
+            <input type="checkbox" name="interfaces" value="{{ interface.interface }}">
+          </td>
+        </tr>
+      {% endfor %}
+      <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+          <b>Deploy port:</b>
+        </td>
+        <td>
+          <select name="template_id" class="form-control-sm" required>
+            <option value="">None</option>
+            {% for port_template in port_templates %}
+                <option value="{{ port_template.id }}">{{ port_template }}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>
+          <input type="submit" class="btn btn-default btn-xs" value="Deploy">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<p></p>
+
+{% endblock %}

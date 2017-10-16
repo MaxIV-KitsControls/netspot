@@ -1,0 +1,50 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>{{ name }}</h1>
+
+{% if message %}
+  {{ message }}
+{% endif %}
+
+<p>Number of assets in this group: {{ num_assets }}</p>
+
+
+<h2>Group variables</h2>
+<table class="table table-hover table-condensed">
+  <thead>
+    <tr>
+      <th width='150px'>Variable</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key, value in group.items %}
+      {% if key != '_id' and key != 'variables' %}
+        <tr>
+          <th>{{ key }}:</th>
+          <td>{{ value }}</td>
+          <td></td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+
+    {% if variables %}
+      {% include 'includes/user_variables.htm' %}
+    {% endif %}
+  </tbody>
+</table>
+
+
+<h2>Actions</h2>
+<h4>Add variable</h4>
+{% include 'includes/form_add_user_variable.htm' %}
+
+<h4>Delete group</h4>
+<a href="/deletegroup/{{ name }}" onclick="return confirm('Are you sure you want to delete this group?');">Delete group</a>
+
+{% include 'asset_table.htm' %}
+
+<p></p>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Port report</h1>
+
+<p><b>Search for:</b> {{ outlet }}<p>
+
+{% if error %}
+  <p><font color="red">Error: {{ error }}</font></p>
+{% else %}
+  <p><b>Interface:</b> {{ asset }}:{{ interface_name }}</p>
+
+  <h4>Interface</h4>
+  <b>State:</b> {% if interface.link_state == 'Up' %}
+                  <font color='green'>{{ interface.link_state }}</font>
+                {% else %}
+                  <font color='red'>{{ interface.link_state }}</font>
+                {% endif %}<br>
+  <b>Speed:</b> {{ interface.speed }}<br>
+  <b>Duplex:</b> {{ interface.duplex }}<br>
+  <b>Last flapped:</b> {{ interface.flapped }}<br>
+  <b>Auto negotiation:</b> {{ interface.auto_neg }}<br>
+
+  {% if not lldp.empty %}
+    <h4>LLDP information</h4>
+    <b>Remote chassis id:</b> {{ lldp.remote_chassis_id }}<br>
+    <b>Remote port description:</b> {{ lldp.remote_port_description }}<br>
+    <b>Remote system:</b> {{ lldp.remote_system }}<br>
+  {% endif %}
+
+  <h4>MAC(s) found on port</h4>
+  {% if macs.mac_entries %}
+    {% for mac in macs.mac_entries %}
+      <b>MAC:</b> {{ mac.mac }}<br>
+      <b>VLAN:</b> {{ mac.vlan }}<br>
+    {% endfor %}
+  {% else %}
+    No MACs found.
+  {% endif %}
+
+  <h4>Log messages</h4>
+  {% if log_messages %}
+    {% for line in log_messages %}
+      <pre>{{ line }}</pre>
+    {% endfor %}
+  {% else %}
+    No log entires found.
+  {% endif %}
+
+{% endif %}
+
+{% if mac_address %}
+  <h4>DHCP logs</h4>
+  {% if dhcp_logs %}
+    <p>Found {{ dhcp_logs|length }} DHCP log entries for <b>{{ mac_address }}</b>.</p>
+    {% for dhcp_line in dhcp_logs %}
+      {{ dhcp_line }}<br>
+    {% endfor %}
+  {% else %}
+    {% if not dhcp_error %}
+      <p>No DHCP logs found.</p>
+    {% else %}
+      <font color="red">{{ dhcp_error }}</font>
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% endblock %}
+
+

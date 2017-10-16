@@ -1,0 +1,14 @@
+<table>
+  <tr>
+    <td width="200">
+      <form action="{% url 'ipusagesearch' %}" method="POST">
+        {% csrf_token %}
+        <p><input type="search" name="search" value="{{ ipusagefilter }}"></p>
+          <input type="submit" value="Search">
+      </form>
+    </td>
+    <td valign="top">
+      Example: "192.168.96.1", "asset:w-netlab-sw-3"
+    </td>
+  </tr>
+</table>

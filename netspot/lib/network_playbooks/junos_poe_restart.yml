@@ -1,0 +1,31 @@
+---
+- name: PoE restart
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  vars:
+    netconf:
+      host: "{{ loopback }}"
+      username: automation
+      ssh_keyfile: "{{ ssh_keyfile }}"
+      timeout: 900
+
+  tasks:
+  - name: Deactivate PoE
+    junos_config:
+      provider: "{{ netconf }}"
+      timeout: 30
+      comment: 'Deactivate PoE'
+      lines: set poe interface {{ interface }} disable
+
+  - name: Pause 15 seconds
+    pause:
+      seconds: 15
+
+  - name: Reactivate PoE
+    junos_config:
+      provider: "{{ netconf }}"
+      timeout: 30
+      comment: 'Deactivate PoE'
+      lines: delete poe interface {{ interface }}

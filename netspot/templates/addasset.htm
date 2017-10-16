@@ -1,0 +1,35 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Add asset</h1>
+
+{% if message %}
+  <font color="red">{{ message }}</font>
+{% endif %}
+
+<form action="{% url 'insertasset' %}" method="POST">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="asset">Asset</label>
+    <input type="text" class="form-control" name="asset" placeholder="w-netlab-sw0" required>
+  </div>
+  <div class="form-group">
+    <label for="loopback">Loopback</label>
+    <input type="text" class="form-control" name="loopback" placeholder="IP address" required>
+  </div>
+  <div class="form-group">
+    <label for="groups">Group(s)</label>
+    <input type="text" class="form-control" name="groups" placeholder="Comma separated list" required>
+  </div>
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" name="username" placeholder="Username" required>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" name="password" placeholder="Password" required>
+  </div>
+  <button type="submit" class="btn btn-default">Add asset</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+---
+- name: Backup configuration
+  junos_config:
+    backup: yes
+    timeout: 30
+    host: "{{ loopback }}"
+    username: automation
+    rollback: 1
+    ssh_keyfile: "{{ ssh_keyfile }}"

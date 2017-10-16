@@ -1,0 +1,35 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Assets</h1>
+
+<p><a href="{% url 'addasset' %}">Add new asset</a></p>
+
+{% if filter %}
+  <p><b>Search</b> {{ filter }}</p>
+{% endif %}
+
+{% include 'asset_table.htm' %}
+
+{% if not filter %}
+  <center>
+  <p>Showing result: {{ showing_result }}</p>
+
+    {% if no_prev %}
+      Prev
+    {% else %}
+      <a href="{% url 'assets' %}{{ prev_page }}">Prev</a>
+    {% endif %}
+  -
+    {% if no_next %}
+      Next
+    {% else %}
+      <a href="{% url 'assets' %}{{ next_page }}">Next</a>
+    {% endif %}
+  </center>
+{% endif %}
+
+
+<p></p>
+
+{% endblock %}

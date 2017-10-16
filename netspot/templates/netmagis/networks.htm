@@ -1,0 +1,39 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>NetMagis - All networks</h1>
+
+<table class="table table-hover table-condensed">
+  <thead>
+    <th width='100px'>Name</th>
+    <th width='100px'>Location</th>
+    <th width='50px'>Network</th>
+    <th width='100px'>Gateway</th>
+    <th width='100px'>Comment</th>
+  </thead>
+  <tbody>
+    {% for network in networks %}
+      <tr>
+        <td>
+          {{ network.name }}
+        </td>
+        <td>
+          {{ network.location }}
+        </td>
+        <td>
+          {{ network.addr4 }}
+        </td>
+        <td>
+          {{ network.gw4 }}
+        </td>
+        <td>
+          {{ network.comment }}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p></p>
+
+{% endblock %}

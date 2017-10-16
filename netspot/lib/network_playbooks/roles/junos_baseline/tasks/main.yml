@@ -1,0 +1,10 @@
+---
+- name: Get baseline
+  junos_command:
+    host: "{{ loopback }}"
+    username: automation
+    ssh_keyfile: "{{ ssh_keyfile }}"
+    commands:
+      - show version
+      - show interfaces
+  register: baseline

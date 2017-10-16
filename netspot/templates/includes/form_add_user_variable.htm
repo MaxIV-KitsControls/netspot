@@ -1,0 +1,14 @@
+<form action="{% url 'addvariable' %}" method="POST" class="form-inline">
+  <input type="hidden" name="name" value="{{ name }}">
+  <input type="hidden" name="target" value="{{ variable_type }}">
+  {% csrf_token %}
+    <div class="form-group">
+    <label for="variable">Variable</label>
+    <input type="text" class="form-control-sm" name="variable" required>
+  </div>
+  <div class="form-group">
+    <label for="Value">Value</label>
+    <input type="text" class="form-control-sm" name="value" required>
+  </div>
+  <button type="submit" class="btn btn-default btn-xs">Add</button>
+</form>

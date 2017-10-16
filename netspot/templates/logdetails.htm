@@ -1,0 +1,48 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Playbook run log details</h1>
+
+<table class="table table-condensed">
+<thead>
+  <tr>
+    <th width='80'>Username</th>
+    <th width='80'>Date</th>
+    <th width='50'>Time</th>
+    <th width='70'>Status</th>
+    <th width='180'>Playbook</th>
+    <th width='250'>Arguments</th>
+    <th width='50'>Runtime</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>{{ log_entry.username }}</td>
+    <td>{{ log_entry.date }}</td>
+    <td>{{ log_entry.time }}</td>
+    <td>
+      {% if log_entry.success %}
+        <font color="green">Success</font>
+      {% else %}
+        <font color="red">Fail</font> - <a href="{% url 'retry_task' log_id %}" onclick="return confirm('Are you sure you want to retry job?');">Retry</a>
+      {% endif %}
+    </td>
+    <td>{{ log_entry.playbook }}</td>
+    <td>
+      {% for var, value in log_entry.arguments.items %}
+        <b>{{ var }}:</b> {{ value }}<br>
+      {% endfor %}
+    </td>
+    <td>{{ log_entry.runtime }}s</td>
+  </tr>
+</tbody>
+</table>
+
+<p>
+<p><b>Filter:</b></p>
+<p>{{ log_entry.filter }}</p>
+
+<p><b>Output:</b></p>
+<p>{{ color_output|safe|linebreaks }}</p>
+
+{% endblock %}

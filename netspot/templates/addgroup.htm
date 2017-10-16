@@ -1,0 +1,17 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Add group</h1>
+
+{% if message %}
+  <font color="red">{{ message }}</font>
+{% endif %}
+
+<form action="{% url 'insertgroup' %}" method="POST">
+  {% csrf_token %}
+  <b>Group name</b><br>
+  <p><input type="text" name="group" value="" required></p>
+  <input type="submit" value="Add group">
+</form>
+
+{% endblock %}

@@ -1,0 +1,3 @@
+---
+- name: Discover asset details and update NetSPOT database
+  shell: "/usr/share/nginx/netspot/netspot/lib/spotmax/nsclient.py --discover {{ inventory_hostname }} -u automation -k {{ ssh_keyfile }}"

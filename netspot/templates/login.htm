@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  {% block title %}<title>NetSPOT</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<div class="container">
+  <h1>NetSPOT Login</h1>
+  {% if message %}
+    <p>{{ message }}</p>
+  {% endif %}
+  <form action="/auth/" method="POST">
+    {% csrf_token %}
+    <table>
+      <thead>
+        <tr>
+          <th width="100px">Username</th>
+          <td><input type="text" name="username" class="form-control-sm" required></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Password</th>
+          <td><input type="password" name="password" class="form-control-sm" required></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td><button type="submit" class="btn btn-default btn-sm">Login</button></td>
+          <td>&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
+
+</html>
+

@@ -1,0 +1,29 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Search DHCP logs</h1>
+
+<form action="{% url 'dhcp_search' %}" method="POST" class="form-inline">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <th width='120'>Search</th><td><input type="text" class="form-control" name="search" required></td>
+    </tr>
+    <tr>
+      <th>Network</th>
+      <td>
+        <select name="network" class="form-control" required>
+              <option value="None">Please select</option>
+              <option value="blue">Blue</option>
+              <option value="green">Green</option>
+              <option value="white">White</option>
+        </select>
+      </td>
+    </tr>
+  </table><br>
+  <p><button type="submit" class="btn btn-default">Search</button></p>
+</form>
+
+{% endblock %}
+
+

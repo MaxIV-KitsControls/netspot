@@ -1,0 +1,24 @@
+<tr>
+  <td>&nbsp;</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>
+    <b>User variables</b>
+  </td>
+  <td></td>
+  <td></td>
+</tr>
+{% for user_variable in variables %}
+  {% for vkey, vvalue in user_variable.items %}
+    <tr>
+      <th>{{ vkey }}</th>
+      <td>{{ vvalue|truncatechars:70 }}</td>
+      <td>
+        <a href="/deletevariable/{{ variable_type }}/{{ name }}/{{ vkey }}"
+           onclick="return confirm('Are you sure you want to delete {{ vkey }}?')";>Delete</a>
+      </td>
+    <tr>
+  {% endfor %}
+{% endfor %}

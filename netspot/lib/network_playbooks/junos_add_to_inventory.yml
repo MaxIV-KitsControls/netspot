@@ -1,0 +1,28 @@
+# Run: ANSIBLE_NET_USERNAME=XXXXX ANSIBLE_NET_PASSWORD=XXXXX FILTER=XXXXXX ansible-playbook -i ./spotmax/nsinv.py  network_playbooks/junos_add_automation_user.yml
+
+---
+- name: Add JUNOS device to NetSPOT
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Enable NETCONF
+    no_log: true
+    junos_netconf:
+      host: "{{ inventory_hostname }}"
+      timeout: 30
+      listens_on: 830
+      state: present
+
+  - name: Add node to NetSPOT
+    shell: "/usr/share/nginx/netspot/netspot/lib/spotmax/nsclient.py -a {{ inventory_hostname }} -l {{ loopback }} -r {{ group }} -u {{ ANSIBLE_NET_USERNAME }} -p {{ ANSIBLE_NET_PASSWORD }}"
+    register: add_node
+    changed_when: add_node == 'Asset already exists.'
+    no_log: true
+
+  - name: Add automation user
+    junos_config:
+      comment: Add automation config
+      host: "{{ inventory_hostname }}"
+      lines: set system login user automation class super-user authentication ssh-rsa "ssh-rsa {{ ssh_key }} automation@w-v-netconf-0.maxiv.lu.se" from {{ auto_server }}

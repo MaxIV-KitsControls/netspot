@@ -1,0 +1,44 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Configuration generation - {{ template.name }}</h1>
+
+<p><a href="/templify/download/{{ config_filename }}" download>Download config</a> - <a href="/admin/netspot/configurationtemplate/{{ template.id }}/change/">Edit template</a></p>
+
+{% if playbooks %}
+  <form action="{% url 'playbookredirector' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="config_filename" value='{{ config_filename }}' required>
+    {% if asset_name %}<input name="asset_name" value="{{ asset_name }}" type="hidden">{% endif %}
+    <table>
+      <tr>
+        <td width='200px'>
+          <b>Push using playbook:</b>
+        </td>
+        <td width='200px'>
+          <select name="playbook" class="form-control" required>
+          {% for playbook in playbooks %}
+              <option value="{{ playbook.id }}">{{ playbook }}</option>
+          {% endfor %}
+          </select>
+        </td>
+        <td>
+          <input type="submit" class="btn btn-default" value="Prepare push">
+        </td>
+      </tr>
+    </table>
+  </form>
+{% endif %}
+
+<table style="border-collapse: separate; border-spacing: 10px;" width="100%">
+  <tr>
+    <td width="50%"><h4>Template</h4></td>
+    <td width="50%"><h4>Configuration</h4></td>
+  </tr>
+  <tr>
+    <td><pre>{{ template.template|linebreaksbr }}</pre></td>
+    <td><pre>{{ config|linebreaksbr }}</pre></td>
+  </tr>
+</table>
+
+{% endblock %}

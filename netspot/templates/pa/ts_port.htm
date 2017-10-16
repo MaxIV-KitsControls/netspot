@@ -1,0 +1,24 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Port troubleshooter</h1>
+
+<form action="{% url 'pa_troubleshoot' %}" method="POST" class="form-inline">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <th width='120'>Port</th>
+      <td width='200'>
+        <input type="text" class="form-control" name="outlet" required>
+      </td>
+      <td>
+        Outlet ID, cable ID, cable path
+      </td>
+    </tr>
+  </table><br>
+  <p><button type="submit" class="btn btn-default">Troubleshoot port</button></p>
+</form>
+
+{% endblock %}
+
+

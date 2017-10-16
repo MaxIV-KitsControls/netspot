@@ -1,0 +1,19 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>NetMagis - DHCP/DNS/IP</h1>
+
+<a href="{% url 'nm_networks' %}">List all networks</a>
+
+<p></p>
+
+<form action="{% url 'nm_searchhost' %}" method="POST">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="search">Search NetMagis for MAC address or hostname</label>
+    <input type="search" name="search" class="form-control" id="search" value="{{ filter }}">
+  </div>
+  <button type="submit" class="btn btn-default">Search</button>
+</form>
+
+{% endblock %}

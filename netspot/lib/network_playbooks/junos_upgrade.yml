@@ -1,0 +1,62 @@
+#
+# TODO:
+# Check output for "Checking pending install on fpc0". This happens if a request system software add was done witout a reboot
+# Change to automation-white
+# 
+
+---
+- name: JUNOS Upgrade
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  vars:
+    netconf:
+      host: "{{ loopback }}"
+      username: automation
+      ssh_keyfile: "{{ ssh_keyfile }}"
+      timeout: 900
+      transport: netconf
+
+  roles:
+    - role: junos_config_backup
+    - role: junos_baseline
+
+  tasks:
+
+  - name: Request system snapshot
+    junos_command:
+      display: text
+      provider: "{{ netconf }}"
+      #commands: request system snapshot slice alternate
+      rpcs: request-snapshot slice=alternate
+      wait_for:
+        - result[0] contains archived
+    tags:
+      - snapshot
+  - name: Upload JUNOS
+    shell: "/usr/bin/scp -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -i {{ ssh_keyfile }} {{ junos_path }}/{{ target_junos_version }} automation@{{ loopback }}:/var/tmp"
+    tags:
+      - upgrade
+
+  - name: Install JUNOS
+    junos_package:
+      provider: "{{ netconf }}"
+      no_copy: true
+      src: "{{ junos_path }}/{{ target_junos_version }}"
+      reboot: True
+      timeout: 900
+    tags:
+      - upgrade
+
+  - wait_for:
+      host: "{{ loopback }}"
+      state: started
+      delay: 10
+      sleep: 10
+      timeout: 900
+
+  - name: Discover nodes
+    shell: "/usr/share/nginx/netspot/netspot/lib/spotmax/nsclient.py --discover {{ inventory_hostname }} -u automation -k {{ ssh_keyfile }}"
+    tags:
+      - discover

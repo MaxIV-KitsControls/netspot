@@ -1,0 +1,13 @@
+---
+- name: Add JUNOS Automation user
+  hosts: all
+  gather_facts: no
+  connection: local
+  strategy: debug
+
+  - name: Add automation user
+    junos_config:
+     comment: Add automation config
+     host: "{{ loopback }}"
+     timeout: 30
+     lines: set system login user automation class super-user authentication ssh-rsa "ssh-rsa {{ ssh_key }} automation@w-v-netconf-0.maxiv.lu.se" from {{ auto_server }}      

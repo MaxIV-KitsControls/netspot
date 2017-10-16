@@ -1,0 +1,9 @@
+---
+- name: Discover nodes
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Discover nodes
+    shell: "/usr/share/nginx/netspot/netspot/lib/spotmax/nsclient.py --discover {{ inventory_hostname }} -u automation -k {{ ssh_keyfile }}"

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  {% block title %}<title>NetSPOT</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-sm-2">
+      {% block sidebar %}
+        <h3>NetSPOT</h3>
+        {% if not request.user.is_staff %}
+            <p>Beamline support</p>
+
+            <p>
+              {% for group in request.user.groups.all %}
+                {{ group }}<br>
+              {% endfor %}
+            </p>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+          Running as <b>{{ request.user.username }}</b>
+        {% endif %}
+        <ul class="sidebar-nav">
+          {% if request.user.is_staff %}
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'assets' %}">Assets</a></li>
+            <li><a href="{% url 'groups' %}">Groups</a></li>
+            <br>
+            <li><a href="{% url 'ansibletasks' %}">Ansible jobs</a></li>
+            <br>
+            <li><a href="{% url 'playbooks' %}">Playbooks</a></li>
+            <li><a href="{% url 'templify' %}">Templates</a></li>
+            <br>
+            <li><a href="{% url 'pa_port' %}">Port Automation</a></li>
+            <li><a href="{% url 'pa_ts_port' %}">Port Troubleshooter</a></li>
+            <li><a href="{% url 'dhcp_search' %}">DHCP Search</a></li>
+            <br>
+            <li><a href="{% url 'netmagis' %}">NetMagis</a></li>
+            <br>
+            <li><a href="{% url 'reports' %}">Reports</a></li>
+            <br>
+            <br>
+            <li><a href="http://netspot/docs/index.html">Documentation</a></li>
+          {% else %}
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <br>
+            <li><a href="{% url 'pa_port' %}">Port Automaiton</a></li>
+            <li><a href="{% url 'pa_ts_port' %}">Port Troubleshooter</a></li>
+            <li><a href="{% url 'dhcp_search' %}">DHCP Search</a></li>
+          {% endif %}
+        </ul>
+
+        {% if request.user.is_staff %}
+          <form action="{% url 'search' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="search">Search</label>
+              <input type="search" name="search" class="form-control" id="search" value="{{ filter }}">
+            </div>
+            <button type="submit" class="btn btn-default">Search</button>
+          </form>
+          <p>
+          <h3>MAC-ARP</h3>
+          <ul class="sidebar-nav">
+              <li><a href="{% url 'macs' %}">MACs</a></li>
+              <li><a href="{% url 'ipusage' %}">IP Usage</a></li>
+          </ul>
+        {% endif %}
+        <center><a href="{% url 'logout_user' %}">Log out</a></center>
+      {% endblock %}
+      </div>
+      <div class="col-sm-10 ">
+      {% block content %}{% endblock %}
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "base.htm" %}
+
+{% block content %}
+<h1>Playbook run log</h1>
+
+<table class="table table-hover table-condensed">
+<tr>
+  <th width='80'>Username</th>
+  <th width='90'>Date</th>
+  <th width='60'>Time</th>
+  <th width='200'>Playbook</th>
+  <th width='70'>Runtime</th>
+  <th width='170'>Filter</th>
+  <th width='100'>Status</th>
+  <th></th>
+</tr>
+
+{% for log_entry in log_entries %}
+  <tr>
+    <td>{{ log_entry.username }}</td>
+    <td>{{ log_entry.date }}</td>
+    <td>{{ log_entry.time }}</td>
+    <td>{{ log_entry.playbook }}</td>
+    <td>{{ log_entry.runtime }} s</td>
+    <td>{{ log_entry.filter|slice:":20" }}</td>
+    <td>
+      {% if log_entry.success %}
+        <font color="green">Success</font>
+      {% else %}
+        <font color="red">Fail</font> - <a href="{% url 'retry_task' log_entry.id %}" onclick="return confirm('Are you sure you want to retry job?');">Retry</a>
+      {% endif %}
+    </td>
+    <td><a href="logdetails/{{ log_entry.id }}">Details</a></td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock %}
