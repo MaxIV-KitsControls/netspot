@@ -7,29 +7,67 @@
   <font color="red">{{ message }}</font>
 {% endif %}
 
-<form action="{% url 'insertasset' %}" method="POST">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="asset">Asset</label>
-    <input type="text" class="form-control" name="asset" placeholder="w-netlab-sw0" required>
-  </div>
-  <div class="form-group">
-    <label for="loopback">Loopback</label>
-    <input type="text" class="form-control" name="loopback" placeholder="IP address" required>
-  </div>
-  <div class="form-group">
-    <label for="groups">Group(s)</label>
-    <input type="text" class="form-control" name="groups" placeholder="Comma separated list" required>
-  </div>
-  <div class="form-group">
-    <label for="username">Username</label>
-    <input type="text" class="form-control" name="username" placeholder="Username" required>
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" class="form-control" name="password" placeholder="Password" required>
-  </div>
-  <button type="submit" class="btn btn-default">Add asset</button>
-</form>
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Asset details</h3>
+      <form action="{% url 'insertasset' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="asset">Asset</label><br>
+          <input type="text" class="form-control-sm" name="asset" placeholder="w-netlab-sw0" required>
+        </div>
+        <div class="form-group">
+          <label for="loopback">Loopback</label><br>
+          <input type="text" class="form-control-sm" name="loopback" placeholder="IP address" required>
+        </div>
+        <div class="form-group">
+          <label for="groups">Group(s)</label><br>
+          <input type="text" class="form-control-sm" name="groups" placeholder="Comma separated list" required>
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label><br>
+          <input type="text" class="form-control-sm" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label><br>
+          <input type="password" class="form-control-sm" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-default">Add asset</button>
+      </form>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Instructions</h3>
+      Please enable NETCONF and configure group SSH key in order for NetSPOT to be able to connect and interact with the asset.
+
+      <h4>Enable NETCONF</h4>
+
+<pre>
+system {
+  services {
+      netconf {
+          ssh {
+              port 830;
+          }
+      }
+  }
+}
+</pre>
+
+      <h4>Enable correct group SSH key</h4>
+
+      <p>Replace <b>SSH_KEY_HERE</b> and <b>SERVER_IP</b> with the correct SSH key and one of the following IP addresses. White: 192.168.19.59, Blue: 172.16.0.34, Green: 10.0.0.42.</p>
+
+      <p>SSH keys can be found under the group page in NetSPOT. If this is a new group you will need to set a new variable under the group. Name "ssh_key", value = SSH key.</p>
+
+<pre>
+set system login user automation class super-user authentication
+  ssh-rsa "ssh-rsa SSH_KEY_HERE automation@w-v-netconf-0.maxiv.lu.se" from SERVER_IP
+</pre>
+    </td>
+  </tr>
+</table>
+
+
 
 {% endblock %}
