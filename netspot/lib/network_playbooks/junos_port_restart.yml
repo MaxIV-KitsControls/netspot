@@ -1,0 +1,31 @@
+---
+- name: JUNOS Port enable/disable
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  vars:
+    netconf:
+      host: "{{ loopback }}"
+      username: automation
+      ssh_keyfile: "{{ ssh_keyfile }}"
+      timeout: 900
+
+  tasks:
+  - name: Disable port
+    junos_config:
+      provider: "{{ netconf }}"
+      timeout: 30
+      comment: 'Disable port'
+      lines: set interfaces {{ interface }} disable
+
+  - name: Pause 15 seconds
+    pause:
+      seconds: 15
+
+  - name: Enable port
+    junos_config:
+      provider: "{{ netconf }}"
+      timeout: 30
+      comment: 'Enable port'
+      lines: delete interfaces {{ interface }} disable
