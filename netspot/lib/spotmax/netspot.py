@@ -12,12 +12,6 @@ from network_device import NetworkDevice
 
 import netspot_settings
 
-# Defaults
-DATABASE = netspot_settings.DATABASE
-COLL_NETSPOT = netspot_settings.COLL_NETSPOT
-COLL_NETSPOT_GROUPS = netspot_settings.COLL_NETSPOT_GROUPS
-
-
 class Asset(object):
   """Class to represent an asset."""
 
@@ -55,7 +49,7 @@ class Asset(object):
 class NetSPOT(SpotMAX):
   """Class that interacts with the MongoDB backend."""
 
-  def __init__(self, database=DATABASE, collection=COLL_NETSPOT):
+  def __init__(self, database=netspot_settings.DATABASE, collection=netspot_settings.COLL_NETSPOT):
     SpotMAX.__init__(self, database, collection)
 
   def _update_discover_data(self, asset, facts):
