@@ -80,11 +80,22 @@ class Group(object):
     return {'hosts': self.members,
             'vars': self.vars}
 
-def AnsibleInventory(attribute=None, json_output=True):
-  """Class to generate and return Ansible JSON inventory data."""
+def AnsibleInventory(attribute=None, json_output=True, inventory=None):
+  """Class to generate and return Ansible JSON inventory data.
 
-  # Get devices
-  inventory = NetSPOT()
+  Args:
+    attribute: string, what to search for
+    json_output: boolean, True: return JSON
+                          False: return raw data
+    inventory: searchable inventory
+
+  Return:
+    search result in either JSON or raw format
+  """
+
+  # Reurn {} if inventory is missing
+  if not inventory:
+    return {}
 
   if attribute:
     cursor = inventory.search(attribute)
@@ -132,9 +143,9 @@ def main():
 
   if args.list:
     if args.filter:
-      print AnsibleInventory(attribute=args.filter)
+      print AnsibleInventory(attribute=args.filter, inventory=NetSPOT())
     elif os.environ.get('FILTER'):
-      print AnsibleInventory(attribute=os.environ['FILTER'])
+      print AnsibleInventory(attribute=os.environ['FILTER'], inventory=NetSPOT())
     else:
       print "Need filter criteria. Specify with -s or env variable FILTER."
 
