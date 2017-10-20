@@ -11,6 +11,7 @@ import ipaddress
 
 import helpers
 import netspot
+import netspot_settings
 
 from napalm import get_network_driver
 from spotmax import SpotMAX
@@ -151,7 +152,7 @@ class NetCollector(object):
 class IPUsage(SpotMAX):
   """Class that save IP usage to database."""
 
-  def __init__(self, device_macs, database=netspot.DATABASE, collection=netspot.COLL_IP):
+  def __init__(self, device_macs, database=netspot_settings.DATABASE, collection=netspot_settings.COLL_IP):
     SpotMAX.__init__(self, database, collection)
     #super(IPUsage, self).__init__(database, collection)
     self.device_macs = device_macs

@@ -17,7 +17,6 @@ DATABASE = netspot_settings.DATABASE
 COLL_NETSPOT = netspot_settings.COLL_NETSPOT
 COLL_NETSPOT_GROUPS = netspot_settings.COLL_NETSPOT_GROUPS
 COLL_MACS = netspot_settings.COLL_MACS
-COLL_IP = netspot_settings.COLL_IP
 COLL_PLAYBOOK_LOGS = netspot_settings.COLL_PLAYBOOK_LOGS
 
 

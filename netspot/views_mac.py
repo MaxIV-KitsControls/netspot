@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 import helpers
+import netspot_settings
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,7 @@ from .lib.spotmax import netspot
 def ipusage(request):
   """Lists all assets."""
 
-  inventory = netspot.NetSPOT(collection=netspot.COLL_IP)
+  inventory = netspot.NetSPOT(collection=netspot_settings.COLL_IP)
   search_result = inventory.search('', key='ip', sort=[("date", 1), ("time", 1)], limit=20)
 
   return render(
@@ -31,7 +32,7 @@ def ipusagesearch(request):
   find = helpers.get_search_term(request)
 
   # Search
-  inventory = netspot.NetSPOT(collection=netspot.COLL_IP)
+  inventory = netspot.NetSPOT(collection=netspot_settings.COLL_IP)
   search_result = inventory.search(find, key='ip', sort=[("date", 1), ("time", 1)])
 
   return render(
