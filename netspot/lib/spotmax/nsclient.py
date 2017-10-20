@@ -8,7 +8,8 @@ import getpass
 import argparse
 from pprint import pprint
 
-from netspot import Asset, NetSPOT, NetSPOTGroup
+from netspot import Asset, NetSPOT
+from spotmax import SPOTGroup
 
 # Arguments
 parser = argparse.ArgumentParser(description='MAX IV Network SPOT - netspot')
@@ -136,7 +137,7 @@ def parse_asset():
 def parse_group():
   """Execute group actions based on arguments."""
 
-  inventory = NetSPOTGroup()
+  inventory = SPOTGroup()
   if args.add:
     # Add group
     result = inventory.add_group(args.add)

@@ -6,8 +6,48 @@
 """
 
 import unittest
-from spotmax import SpotMAX
+from spotmax import SpotMAX, SPOTGroup
 from collections import defaultdict
+
+class MockNetworkDevice(object):
+  def __init__(self, asset, loopback=None, groups='', username=None, password=None, ssh_keyfile=None):
+
+    if loopback == '1':
+      self.facts = DEVICE1_FACTS
+    else:
+      self.facts = DEVICE2_FACTS
+
+    self.interfaces = {'ge-0/0/6': {u'description': u'',
+                                u'is_enabled': True,
+                                u'is_up': False,
+                                u'last_flapped': -1.0,
+                                u'mac_address': u'54:E0:32:30:87:09',
+                                u'speed': -1}}
+
+    self.macs = [{u'active': True,
+                  u'interface': u'ge-0/0/0.0',
+                  u'last_move': 0.0,
+                  u'mac': u'B8:27:EB:04:FF:A2',
+                  u'moves': 0,
+                  u'static': False,
+                  u'vlan': 201},
+                 {u'active': True,
+                  u'interface': u'xe-0/1/0.0',
+                  u'last_move': 0.0,
+                  u'mac': u'F8:C0:01:38:4F:38',
+                  u'moves': 0,
+                  u'static': False,
+                  u'vlan': 201},
+                 {u'active': True,
+                  u'interface': u'Router',
+                  u'last_move': 0.0,
+                  u'mac': u'54:E0:32:30:87:01',
+                  u'moves': 0,
+                  u'static': True,
+                  u'vlan': 0}]
+
+    self.vlans = list()
+    self.lldp = dict()
 
 class MockData(object):
   def __init__(self):
@@ -264,6 +304,53 @@ class TestSPOTMAX(unittest.TestCase):
     # Test non-existing asset again
     self.assertEqual(0, self.sm.search('empty_again').count())
 
+class TestSPOTGroup(unittest.TestCase):
+
+  def setUp(self):
+    #netspot.NetworkDevice = MockNetworkDevice
+
+    # Setup mock SpotMAX and collection
+    self.ns = SPOTGroup(database=None, collection=None)
+    self.ns.collection = MockCollection()
+
+  def test_add_group(self):
+    # Add new group
+    self.assertTrue(self.ns.add_group('test_group'))
+
+    # Already exist
+    self.assertFalse(self.ns.add_group('test_group'))
+
+  def test_delete_variable(self):
+    group = 'test_group'
+    variable = 'TEST_VAR:TEST_VALUE'
+
+    # Add group and test variable
+    self.assertTrue(self.ns.add_group(group))
+    self.assertTrue(self.ns.add_variable('group', group, variable))
+
+    # Delete variable
+    self.assertTrue(self.ns.delete_variable(group, 'TEST_VAR', 'group'))
+
+  def test_get_variables(self):
+    group = 'test_group'
+    variable = 'TEST_VAR:TEST_VALUE'
+    variable2 = 'TEST_VAR2:TEST_VALUE2'
+
+    # Add group and test variable
+    self.assertTrue(self.ns.add_group(group))
+    self.assertTrue(self.ns.add_variable('group', group, variable))
+
+    # Get variables
+    variables = self.ns.get_variables(group)
+
+    self.assertEqual(1, len(variables))
+    self.assertEqual(['TEST_VAR'], variables[0].keys())
+    self.assertEqual('TEST_VALUE', variables[0]['TEST_VAR'])
+
+    # Add another variable
+    self.assertTrue(self.ns.add_variable('group', group, variable2))
+    variables = self.ns.get_variables(group)
+    self.assertEqual(2, len(variables))
 
 if __name__ == '__main__':
     unittest.main()

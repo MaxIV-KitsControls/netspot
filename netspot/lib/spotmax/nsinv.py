@@ -8,7 +8,8 @@ import json
 import os
 import argparse
 
-from netspot import NetSPOT, NetSPOTGroup
+from netspot import NetSPOT
+from spotmax import SPOTGroup
 
 SPECIAL_FIELDS = ['_id', 'lastModified']
 
@@ -58,7 +59,7 @@ class Group(object):
     self.vars = dict()
 
     # Get inventory
-    inventory = NetSPOTGroup()
+    inventory = SPOTGroup()
 
     # Add group variables
     group_vars = inventory.get_variables(group)

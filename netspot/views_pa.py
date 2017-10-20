@@ -15,6 +15,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 from .models import ConfigurationTemplate, Category
 from .lib.spotmax import netspot
+from .lib.spotmax import spotmax
 
 
 @login_required
@@ -99,7 +100,7 @@ def pa_troubleshoot(request):
     # Get group SSH key file
     group_name = asset_details[0]['groups'][0]
     loopback = asset_details[0]['loopback']
-    group_details = netspot.NetSPOTGroup().search(group_name, key='group')
+    group_details = spotmax.SPOTGroup().search(group_name, key='group')
 
     # Find SSH key
     for var in group_details[0]['variables']:

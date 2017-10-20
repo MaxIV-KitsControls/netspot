@@ -245,54 +245,6 @@ class TestNetSPOT(unittest.TestCase):
     self.assertEqual(device['re2_model'], 'EX4300-48P')
     self.assertEqual(device.get('re1_model'), None)
 
-class NetSPOTGroup(unittest.TestCase):
-
-  def setUp(self):
-    netspot.NetworkDevice = MockNetworkDevice
-
-    # Setup mock SpotMAX and collection
-    self.ns = netspot.NetSPOTGroup(database=None, collection=None)
-    self.ns.collection = MockCollection()
-
-  def test_add_group(self):
-    # Add new group
-    self.assertTrue(self.ns.add_group('test_group'))
-
-    # Already exist
-    self.assertFalse(self.ns.add_group('test_group'))
-
-  def test_delete_variable(self):
-    group = 'test_group'
-    variable = 'TEST_VAR:TEST_VALUE'
-
-    # Add group and test variable
-    self.assertTrue(self.ns.add_group(group))
-    self.assertTrue(self.ns.add_variable('group', group, variable))
-
-    # Delete variable
-    self.assertTrue(self.ns.delete_variable(group, 'TEST_VAR', 'group'))
-
-  def test_get_variables(self):
-    group = 'test_group'
-    variable = 'TEST_VAR:TEST_VALUE'
-    variable2 = 'TEST_VAR2:TEST_VALUE2'
-
-    # Add group and test variable
-    self.assertTrue(self.ns.add_group(group))
-    self.assertTrue(self.ns.add_variable('group', group, variable))
-
-    # Get variables
-    variables = self.ns.get_variables(group)
-
-    self.assertEqual(1, len(variables))
-    self.assertEqual(['TEST_VAR'], variables[0].keys())
-    self.assertEqual('TEST_VALUE', variables[0]['TEST_VAR'])
-
-    # Add another variable
-    self.assertTrue(self.ns.add_variable('group', group, variable2))
-    variables = self.ns.get_variables(group)
-    self.assertEqual(2, len(variables))
-
 
 if __name__ == '__main__':
     unittest.main()

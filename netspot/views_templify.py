@@ -21,6 +21,7 @@ from .models import ConfigurationTemplate, Category
 from .models import Playbook
 
 from .lib.spotmax import netspot
+from .lib.spotmax import spotmax
 
 def get_config(variables, template):
   """Generate config.
@@ -117,7 +118,7 @@ def generate_config(request):
 
     # Get variable for each group
     for group in asset_details['groups']:
-      group_details = netspot.NetSPOTGroup().search(group, key='group')[0]
+      group_details = spotmax.SPOTGroup().search(group, key='group')[0]
 
       # Get user variables if any
       if group_details['variables']:

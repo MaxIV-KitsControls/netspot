@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from .models import ConfigurationTemplate, Category
 from .lib.spotmax import netspot
+from .lib.spotmax import spotmax
 
 def auth_and_login(request):
   """Authenticate and login user."""
@@ -60,7 +61,7 @@ def index(request):
   """Index."""
 
   # Statistics
-  num_groups = netspot.NetSPOTGroup().count()
+  num_groups = spotmax.SPOTGroup().count()
   num_assets = netspot.NetSPOT().count()
   num_interfaces = netspot.NetSPOT().count_interfaces()
 
@@ -112,7 +113,7 @@ def addvariable(request):
     if target == 'asset':
       inventory = netspot.NetSPOT()
     elif target == 'group':
-      inventory = netspot.NetSPOTGroup()
+      inventory = spotmax.SPOTGroup()
 
     # Add variable
     if inventory:
@@ -225,7 +226,7 @@ def deleteasset(request, asset_name):
 def deletegroup(request, group_name):
   """Delete group."""
 
-  inventory = netspot.NetSPOTGroup()
+  inventory = spotmax.SPOTGroup()
   inventory.delete(group_name, key='group')
 
   return groups(request)
@@ -241,7 +242,7 @@ def deletevariable(request, variable, asset_name=None, group_name=None):
   elif group_name:
     name = group_name
     target = 'group'
-    inventory = netspot.NetSPOTGroup()
+    inventory = spotmax.SPOTGroup()
 
   if inventory.delete_variable(name, variable, target):
     message = 'Variable deleted.'
@@ -258,7 +259,7 @@ def group(request, group_name, message=None):
   """Get data for a given group."""
 
   # Get group data
-  inventory = netspot.NetSPOTGroup()
+  inventory = spotmax.SPOTGroup()
   group_data = inventory.search(group_name, key='group')[0]
 
   # Get assets in group
@@ -288,7 +289,7 @@ def group(request, group_name, message=None):
 def groups(request):
   """All grousp."""
 
-  inventory = netspot.NetSPOTGroup()
+  inventory = spotmax.SPOTGroup()
   result = inventory.search('', key='group')
 
   return render(
@@ -334,7 +335,7 @@ def insertgroup(request):
   group_name = request.POST.get('group', None)
 
   # Add to inventory
-  inventory = netspot.NetSPOTGroup()
+  inventory = spotmax.SPOTGroup()
   inventory.add_group(group_name)
   message = 'Group added!'
 

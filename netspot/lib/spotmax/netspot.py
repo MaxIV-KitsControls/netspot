@@ -269,53 +269,6 @@ class NetSPOT(SpotMAX):
 
     return cursor
 
-class NetSPOTGroup(SpotMAX):
-  """Class that interacts with the MongoDB backend."""
-
-  def __init__(self, database=DATABASE, collection=COLL_NETSPOT_GROUPS):
-    SpotMAX.__init__(self, database, collection)
-
-  def add_group(self, group):
-    """Add new group.
-
-    Args:
-      group: string, name of group
-
-    Returns:
-      Boolean: True, added successfully
-               False, not added
-    """
-
-    # Check if group exists already
-    if self._exist(group, key='group'):
-      return False
-
-    # Add group to database
-    self.collection.insert_one({'group': group})
-    return True
-
-  def get_variables(self, group):
-    """Returns all variables for a given group.
-
-    Args:
-      group: string, group name
-
-    Returns:
-      variables: list of dicts, eg. [{'var1': 'val1'}, {'var2': 'val2'}]
-    """
-
-    # Get group
-    cursor = self.collection.find({'group': group})
-
-    try:
-      result = cursor[0]['variables']
-    except (KeyError, IndexError):
-      result = []
-
-    # Return
-    return result
-
-
 class NetSPOTLog(SpotMAX):
   """Class to log playbook runs."""
 
