@@ -47,7 +47,7 @@ def macs(request):
   """Lists all assets."""
 
   # Get the MongoDB collection
-  collection = helpers.mongo_helper(netspot.COLL_MACS)
+  collection = helpers.mongo_helper(netspot_settings.COLL_MACS)
   num_assets = collection.count()
 
   # Number of MACs
@@ -77,7 +77,7 @@ def macsearch(request):
   key, value = netspot.NetSPOT().parse_variable(find)
 
   # Search
-  inventory = netspot.NetSPOT(collection=netspot.COLL_MACS)
+  inventory = netspot.NetSPOT(collection=netspot_settings.COLL_MACS)
   search_result = inventory.search(find, key='asset', sort='asset')
 
   # Filter out any other MAC entries

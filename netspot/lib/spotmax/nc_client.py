@@ -7,7 +7,7 @@
 import argparse
 import getpass
 import net_collector
-import netspot
+import netspot_settings
 
 from spotmax import SpotMAX
 
@@ -42,7 +42,7 @@ def ask_user_passwd():
 class MACS(SpotMAX):
   """Class that interacts with the MongoDB backend."""
 
-  def __init__(self, database=netspot.DATABASE, collection=netspot.COLL_MACS):
+  def __init__(self, database=netspot_settings.DATABASE, collection=netspot_settings.COLL_MACS):
     SpotMAX.__init__(self, database, collection)
 
   def add_macs(self, device_macs):

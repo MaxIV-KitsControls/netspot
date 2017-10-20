@@ -7,7 +7,7 @@ from rest_framework.response import Response
 import helpers
 import nm_helper
 
-from .lib.spotmax import netspot
+import netspot_settings
 
 # API
 @api_view(['GET'])
@@ -19,7 +19,7 @@ def api_get_mac(request, ip_address):
   """
 
   if request.method == 'GET':
-    collection = helpers.mongo_helper(netspot.COLL_MACS)
+    collection = helpers.mongo_helper(netspot_settings.COLL_MACS)
     macs = collection.find({'macs.ip': {'$regex': ip_address}}).sort('asset')
 
     # Serialize response

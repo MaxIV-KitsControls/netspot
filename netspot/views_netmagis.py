@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 import operator
 import nm_helper
 import cdb_helper
+import netspot_settings
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -87,7 +88,7 @@ def searchhost(request):
               netmagis_result.append(host_entry)
 
   # Search for MACs
-  inventory = netspot.NetSPOT(collection=netspot.COLL_MACS)
+  inventory = netspot.NetSPOT(collection=netspot_settings.COLL_MACS)
   mac_search = []
 
   # Find MAC addresses in the MAC database
