@@ -5,8 +5,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 import helpers
-from .lib.spotmax import netspot
-
+import netspot_settings
 
 class Report(object):
   """Class to represent a report."""
@@ -38,7 +37,7 @@ def report_model(request):
   """Reports: Model."""
 
   # DB Search
-  collection = helpers.mongo_helper(netspot.COLL_NETSPOT)
+  collection = helpers.mongo_helper(netspot_settings.COLL_NETSPOT)
   models = collection.aggregate([{'$group' : {'_id': {'model': '$model',
                                                       're0_model': '$re0_model',
                                                       're1_model': '$re1_model'},
@@ -74,7 +73,7 @@ def report_junos_version(request):
   """Report: JUNOS versions."""
 
   # DB Search
-  collection = helpers.mongo_helper(netspot.COLL_NETSPOT)
+  collection = helpers.mongo_helper(netspot_settings.COLL_NETSPOT)
   models = collection.aggregate([{'$group':  {'_id': {'model':'$model', 'version': '$version'},
                                               'count': {'$sum': 1}}}])
 
@@ -99,7 +98,7 @@ def report_playbook_runs(request):
   """Report: Playbooks runs."""
 
   # DB Search
-  collection = helpers.mongo_helper(netspot.COLL_PLAYBOOK_LOGS)
+  collection = helpers.mongo_helper(netspot_settings.COLL_PLAYBOOK_LOGS)
   playbooks = collection.aggregate([{'$group':  {'_id': {'playbook':'$playbook'},
                                                  'count': {'$sum': 1}}}])
 
