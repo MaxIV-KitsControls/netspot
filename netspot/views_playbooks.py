@@ -61,7 +61,9 @@ class PlaybookRun(object):
     """Run playbook."""
 
     # Get inventory
-    inventory = nsinv.AnsibleInventory(attribute=self.search_filter, json_output=False)
+    inventory = nsinv.AnsibleInventory(attribute=self.search_filter,
+                                       json_output=False,
+                                       inventory=netspot.NetSPOT())
 
     # Add Ansible job
     with taskdb.TaskDB() as tasks:
