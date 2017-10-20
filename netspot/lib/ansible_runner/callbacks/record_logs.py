@@ -8,7 +8,7 @@ from datetime import datetime
 from ansible.plugins.callback import CallbackBase
 
 try:
-  from spotmax import netspot
+  from spotmax import spotmax
 except ImportError:
   pass
 
@@ -214,7 +214,7 @@ class CallbackModule(CallbackBase):
       search_filter: string, hosts for the playbook
     """
 
-    log = netspot.NetSPOTLog()
+    log = spotmax.SPOTLog()
 
     # Remove password
     try:

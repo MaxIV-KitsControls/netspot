@@ -2,6 +2,8 @@
 
 """Module to connect to MongoDB. Acts as base class for different SPOTs. eg netspot."""
 
+from bson.objectid import ObjectId
+
 from pymongo import MongoClient
 
 import netspot_settings
@@ -249,6 +251,53 @@ class SPOTGroup(SpotMAX):
 
     # Return
     return result
+
+class SPOTLog(SpotMAX):
+  """Class to log playbook runs."""
+
+  def __init__(self,
+               database=netspot_settings.DATABASE,
+               collection=netspot_settings.COLL_PLAYBOOK_LOGS):
+
+    SpotMAX.__init__(self, database, collection)
+
+  def get_log_entries(self, limit=10):
+    """Return X number of log entries."""
+
+    return self.collection.find().limit(limit).sort([('date', -1), ('time', -1)])
+
+  def get_log_entry(self, log_id):
+    """Find log entry on '_id'."""
+
+    return self.collection.find_one({'_id': ObjectId(log_id)})
+
+  def log(self,
+          username=None,
+          playbook=None,
+          search_filter=None,
+          arguments=None,
+          runtime=None,
+          success=None,
+          output=None):
+    """Write log to database."""
+
+    # Get time and date
+    now = datetime.now()
+
+    # Create log entry
+    log_entry = {'username': username,
+                 'playbook': playbook,
+                 'date': now.strftime("%Y-%m-%d"),
+                 'time': now.strftime("%H:%M"),
+                 'filter': search_filter,
+                 'arguments': arguments,
+                 'runtime': runtime,
+                 'success': success,
+                 'output': output
+                }
+
+    # Save to database
+    self.collection.insert_one(log_entry)
 
 
 def main():

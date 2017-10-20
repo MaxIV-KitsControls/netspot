@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import Playbook, PlaybookVariable
 from .lib.spotmax import netspot, nsinv
+from .lib.spotmax import spotmax
 from .lib.ansible_runner import taskdb
 from netspot.views_templify import template_input
 
@@ -164,7 +165,7 @@ def playbook_input(request, playbook_id, config_file=None, template=None):
 def playbook_log(request):
   """Retrieve log entries."""
 
-  log = netspot.NetSPOTLog()
+  log = spotmax.SPOTLog()
 
   log_entries = log.get_log_entries(50)
 
@@ -185,7 +186,7 @@ def playbook_log(request):
 def playbook_log_details(request, log_id):
   """Get log entry details."""
 
-  log = netspot.NetSPOTLog()
+  log = spotmax.SPOTLog()
 
   log_entry = log.get_log_entry(log_id)
 
@@ -289,7 +290,7 @@ def deletetask(request, task_id):
 def retry_task(request, log_id):
   """Re-add a task to the queue again."""
 
-  log = netspot.NetSPOTLog()
+  log = spotmax.SPOTLog()
 
   # Get log entry and playbook
   log_entry = log.get_log_entry(log_id)
