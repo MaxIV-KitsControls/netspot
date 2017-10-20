@@ -16,3 +16,6 @@
         - "{{ item }}"
     with_lines:
       - cat "{{ config_file }}"
+
+  roles:
+    - role: ns_discover
