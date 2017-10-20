@@ -6,7 +6,7 @@
   gather_facts: no
   connection: local
 
-  tasks:
+  pre_tasks:
   - name: Issue set commands
     junos_config:
       host: "{{ loopback }}"
