@@ -5,6 +5,8 @@
 
 <p><a href="{% url 'playbook_log' %}">Ansible run log</a></p>
 
+<p>Do not refresh this page if you just submitted a new job. This will just re-add the job again. Click "Ansible jobs" to refresh instead.</p>
+
 {% if error_message %}
   <font color="red">{{ error_message }}</font>
 {% else %}
