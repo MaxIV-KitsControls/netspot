@@ -110,7 +110,7 @@ def playbookredirector(request):
 
   # Return playbook input view
   if playbook_id and config_filename:
-    config_filepath = settings.TEMP_DIRECTORY + config_filename
+    config_filepath = config_filename
     return playbook_input(request, playbook_id=playbook_id, config_file=config_filepath)
   else:
     return playbooks(request)
